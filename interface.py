@@ -15,6 +15,7 @@ __author__="svilen.zlatev"
 __date__ ="$2013-8-25 11:47:08$"
 
 """ This is GUI for ASCS """
+""" Git """
 
 import wxversion
 wxversion.select('2.8-gtk2-unicode')
