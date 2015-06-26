@@ -1,0 +1,156 @@
+<wdf>
+  Waste Disposial Facility
+  <cell name="Cell 1">
+        Cell 1
+	<phase name="Phase 1">
+		Phase 1
+		<node mode="0" name="3.6" ver="">
+                    0013A200409C30E3
+		</node>
+		<node mode="0" name="4.3" ver="">
+                    0013A200409C2FF6
+		</node>
+		<node mode="0" name="4.4" ver="">
+                    0013A200409C30E9
+		</node>
+		<node mode="0" name="4.5" ver="">
+                    0013A200408E0846
+		</node>     
+		<node mode="0" name="4.6" ver="">
+                    0013A200409C30E7
+		</node>
+	<node mode="0" name="17.1" ver="">0013A20040868915</node><node mode="0" name="17.2" ver="">0013A2004091CA2B</node><node mode="0" name="17.3" ver="">0013A200409C2FF7</node><node mode="0" name="17.4" ver="">0013A200409C30E5</node><node mode="0" name="17.5" ver="">0013A200409C2FDF</node><node mode="0" name="17.6" ver="">0013A200409C3003</node><node mode="0" name="17.7" ver="">0013A200408D4FA7</node><node mode="0" name="17.8" ver="">0013A2004091CA16</node></phase>
+	
+	<phase name="Phase 2">
+		Phase 2
+		<node mode="0" name="5.2" ver="">None</node>
+		<node mode="0" name="5.3" ver="">
+                    0013A200409C3030
+		</node>
+		<node mode="0" name="5.4" ver="">
+                    0013A200409C30E6
+		</node>
+		<node mode="0" name="5.5" ver="">
+                    0013A200409C30E0
+		</node>     
+		<node mode="0" name="5.6" ver="">
+                    0013A200406E980F
+		</node>
+		<node mode="0" name="6.3" ver="">
+                    0013A200408D4FB1
+		</node>
+		<node mode="0" name="6.4" ver="">
+                    0013A20040868922
+		</node>
+		<node mode="0" name="6.5" ver="">
+                    0013A200409C3025
+		</node>     
+		<node mode="0" name="6.6" ver="">
+                    0013A200406B5131          
+                </node>
+		<node mode="0" name="6.7" ver="">
+                    0013A200406B51BC
+		</node>
+        <node mode="0" name="6.8" ver="">
+                    0013A2004086891B
+        </node>
+	</phase>
+  </cell>
+  <cell name="Cell 2">
+       Cell 2
+      <phase name="Phase 1">
+            Phase 1
+		<node mode="0" name="1.1" ver="">
+			0013A200409C3002
+		</node>
+		<node mode="0" name="1.2" ver="">
+        	0013A200408D4FA7
+		</node>
+		<node mode="0" name="1.3" ver="">
+			0013A2004091E163
+		</node>
+		<node mode="0" name="2.1" ver="">
+        	0013A200408D4FC8
+		</node>
+		<node mode="0" name="2.2" ver="">
+			0013A200408D4FD7
+		</node>
+		<node mode="0" name="2.3" ver="">
+            0013A200409C30DC
+        </node>
+		<node mode="0" name="3.1" ver="">
+			0013A200409C30E5
+		</node>     
+		<node mode="0" name="3.2" ver="">
+			0013A2004049B0BE
+		</node>
+		<node mode="0" name="3.3" ver="">
+			0013A200409C30ED
+		</node>
+      </phase>
+  </cell>
+  
+  GROUPS IN FACILITY
+  
+  <groups cell="Cell 1" phase="Phase 1">
+    <group name="Group 1" state="0">
+	<node>3.6</node></group>
+    <group name="Group 2" state="0">
+	<node>4.3</node></group>  
+    <group name="Group 3" state="0">
+	<node>4.4</node></group>
+    <group name="Group 4" state="0">
+	</group>
+    <group name="Group 5" state="0">
+	<node>4.6</node></group>
+    <group name="Group 6" state="0">
+	</group>
+    <group name="Group 7" state="0">
+	</group>
+    <group name="Group 8" state="0">
+	</group>  
+    <group name="Group 9" state="0">
+	</group>
+    <group name="Group 10" state="0">
+	</group>
+    <group name="Group 11" state="0">
+	</group>
+    <group name="Group 12" state="0">
+	</group>
+  </groups>
+  
+  <groups cell="Cell 2" phase="Phase 1">
+    <group name="Group 1" state="0">
+	<node>16.1</node><node>16.2</node></group>
+    <group name="Group 2" state="0">
+	<node>15.1</node><node>15.2</node><node>15.3</node></group>  
+    <group name="Group 3" state="0">
+	<node>14.1</node><node>14.2</node><node>14.3</node><node>14.4</node></group>
+    <group name="Group 4" state="0">
+	<node>13.1</node><node>13.2</node><node>13.3</node><node>13.4</node><node>13.5</node></group>
+    <group name="Group 5" state="0">
+	<node>12.1</node><node>12.2</node><node>12.3</node><node>12.4</node><node>12.5</node></group>
+    <group name="Group 6" state="0">
+	<node>11.1</node><node>11.2</node><node>11.3</node><node>11.4</node><node>11.5</node></group>
+    <group name="Group 7" state="0">
+	<node>10.1</node><node>10.2</node><node>10.3</node><node>10.4</node><node>10.5</node></group>
+    <group name="Group 8" state="0">
+	<node>9.1</node><node>9.2</node><node>9.3</node><node>9.4</node><node>9.5</node></group>  
+    <group name="Group 9" state="0">
+	<node>8.1</node><node>8.2</node><node>8.3</node><node>8.4</node><node>8.5</node></group>
+    <group name="Group 10" state="0">
+	<node>7.1</node><node>7.2</node><node>7.3</node><node>7.4</node><node>13.6</node></group>
+    <group name="Group 11" state="0">
+	<node>6.1</node><node>6.2</node><node>6.3</node><node>6.4</node></group>
+    <group name="Group 12" state="0">
+	<node>5.1</node><node>5.2</node><node>5.3</node><node>5.4</node></group>
+    <group name="Group 13" state="0">
+	<node>4.1</node><node>4.2</node><node>4.3</node><node>4.4</node></group>
+    <group name="Group 14" state="0">
+	<node>3.1</node><node>3.2</node><node>3.3</node><node>3.4</node></group>
+    <group name="Group 15" state="0">
+	<node>2.1</node><node>2.2</node><node>2.3</node><node>2.4</node></group>
+    <group name="Group 16" state="0">
+	<node>1.1</node><node>1.2</node><node>1.3</node><node>1.4</node></group>
+  </groups>  
+</wdf>

@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<groups>
+  GROUPS IN FACILITY
+  <!--Groups deffinition-->
+  <group name = "Group 1">
+        <active>true</active>
+	<node>2.1</node>
+	<node>3.1</node>
+	<node>4.1</node>
+  </group>
+  <group name = "Group 2">
+        <active>true</active>
+	<node>2.2</node>
+	<node>3.2</node>
+	<node>4.2</node>
+  </group>  
+  <group name = "Group 3">
+        <active>true</active>
+	<node>2.3</node>
+	<node>3.3</node>
+	<node>4.3</node>
+  </group>
+  <group name = "Group 4">
+        <active>true</active>
+	<node>2.4</node>
+	<node>3.4</node>
+	<node>4.4</node>
+  </group>
+  <group name = "Group 5">
+        <active>true</active>
+	<node>2.5</node>
+	<node>3.5</node>
+	<node>4.5</node>
+  </group>
+  <group name = "Group 6">
+        <active>true</active>
+	<node>2.6</node>
+	<node>3.6</node>
+	<node>4.6</node>
+  </group>
+  <group name = "Group 7">
+        <active>true</active>
+	<node>5.2</node>
+	<node>6.2</node>
+	<node>7.2</node>
+  </group>
+  <group name = "Group 8">
+        <active>true</active>
+	<node>5.3</node>
+	<node>6.3</node>
+	<node>7.3</node>
+  </group>  
+  <group name = "Group 9">
+        <active>true</active>
+	<node>5.4</node>
+	<node>6.4</node>
+	<node>7.4</node>
+  </group>
+  <group name = "Group 10">
+        <active>true</active>
+	<node>5.5</node>
+	<node>6.5</node>
+	<node>7.5</node>
+  </group>
+  <group name = "Group 11">
+        <active>true</active>
+	<node>5.6</node>
+	<node>6.6</node>
+	<node>7.6</node>
+  </group>
+  <group name = "Group 12">
+        <active>true</active>
+	<node>6.7</node>
+	<node>7.7</node>
+  </group>
+  <group name = "Group 13">
+        <active>true</active>
+	<node>6.8</node>
+	<node>7.8</node>
+  </group> 
+</groups>

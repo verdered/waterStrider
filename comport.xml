@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<ports>
+<!--COM Ports deffinition-->
+<!--Windows based machines--> 
+  <com name = "COM24">
+        <active>inactive</active>
+        <cell>Cell 1</cell>
+        <phase>Phase 1</phase>
+	<baudrate>9600</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>windows</os>
+  </com>
+
+    <com name = "COM15">
+        <active>inactive</active>
+        <cell>Cell 1</cell>
+        <phase>Phase 1</phase>
+	<baudrate>9600</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>windows</os>
+  </com>
+  
+  <!--Linux based machines-->
+  
+  <com name = "/dev/ttyUSB0">
+        <active>active</active>
+        <cell>Cell 1</cell>
+        <phase>Phase 1</phase>
+	<baudrate>115200</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>linux</os>
+  </com>
+ 
+  <com name = "/dev/ttyUSB1">
+        <active>inactive</active>
+        <cell></cell>
+        <phase></phase>
+	<baudrate>9600</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>linux</os>
+  </com>
+
+  <com name = "/dev/ttyUSB2">
+        <active>inactive</active>
+        <cell></cell>
+        <phase></phase>
+        <baudrate>9600</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>linux</os>
+  </com>
+  
+  <com name = "/dev/ttyUSB3">
+        <active>inactive</active>
+        <cell></cell>
+        <phase></phase>
+        <baudrate>9600</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>linux</os>
+  </com>
+      
+  <com name = "/dev/ttyAMA0">
+        <active>inactive</active>      
+        <cell></cell>
+        <phase></phase>
+	<baudrate>9600</baudrate>
+	<databits>8</databits>
+        <parity>None</parity>
+	<stopbits>1</stopbits>
+	<flowcontrol>None</flowcontrol>
+	<timeout>10</timeout>
+        <os>linux</os>
+  </com>
+</ports>

@@ -1,0 +1,42 @@
+ASCS Change Log file
+
+<25.07.2014> ver.0.6.1
+
+* <FINISHED> ChangeLog file tab was added
+* Some bug fixes
+
+<4.8.2014> ver.0.6.1
+
+* <FINISHED> New battery voltage calculation
+
+<6.8.2014> ver.0.6.1
+
+* <IN PROGRESS> Cell 2 configuration
+* <IN PROGRESS> Groups processing bug fixes
+
+<10.8.2014> ver.0.6.1
+
+* <FINISHED> Added new ID's to widgets
+* <FINISHED> Node discovery function improvement
+* <IN PREGRESS> Adding status text to running items
+
+<16.8.2014> ver.0.6.1
+
+* <FINISHED> Improvement of manual sprinkler control
+* <IN PREGRESS> Adding status text to running items
+* <IN PROGRESS> Groups processing bug fixes
+
+<20.08.2014> ver.0.7.0
+
+* <FINISHED> Node discovery process
+* <FINISHED> Adding new item to facility
+* <IN PROGRESS> Adding RTC dependency
+
+<26.08.2014> ver.0.8.1
+
+* <FINISHED> Interface correction for Item state visualisation.
+* <FINISHED> Radio box Valve control is removed
+* <FINISHED> Added History tab for every item. Everyone can add current status or somethig else to this history
+* <IN PROGRESS> Adding RTC dependency
+* <IN PREGRESS> Adding status text to running items
+* <IN PROGRESS> Groups processing bug fixes
