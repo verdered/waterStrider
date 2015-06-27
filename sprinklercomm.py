@@ -167,7 +167,7 @@ def xbee_pin(xbeeRemAddr, xbeePin, xbeePinState):
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
         return 0
-
+    else:
         ser.close()
         
        
@@ -193,7 +193,7 @@ def xbee_is(xbeeRemAddr):
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
         return 0
-    
+    else:
         ser.close()    
         
 def xbee_hv(xbeeRemAddr):
@@ -218,7 +218,7 @@ def xbee_hv(xbeeRemAddr):
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
         return 0
-    
+    else:
         ser.close()        
 
 def xbee_vr(xbeeRemAddr):
@@ -243,7 +243,7 @@ def xbee_vr(xbeeRemAddr):
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
         return 0
-    
+    else:
         ser.close()
         
 def xbee_tp(xbeeRemAddr):
@@ -268,7 +268,7 @@ def xbee_tp(xbeeRemAddr):
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
         return 0
-    
+    else:
         ser.close() 
         
 ######################### Threaded #############################################
@@ -305,4 +305,5 @@ def hiddenNodediscovery(q):
     except serial.SerialException as ex:
         text = "Exception: " + ex.__str__()
         return text
-    ser.close()   
+    else:
+        ser.close()   
