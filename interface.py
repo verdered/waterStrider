@@ -25,6 +25,27 @@ from sprinklercomm import *
 import platform
 import threading
 
+################################################################################################
+################################################################################################
+def testThreadBody(callback):
+    for i in range(60):
+        #delay(500)
+        print "I'm in new thread and working fine" , threading.currentThread().getName()
+        #print "thread ID =" , threading.currentThread.ident()
+        print "starting node_discovery()"
+        node_discovery()
+        print "finished node_discovery()"
+        #delay(500)
+        callback()
+        
+def cb_testThread():
+    print "cb_testThread, threadID = ", threading.currentThread().getName()
+
+testThread = threading.Thread(target=testThreadBody, args=(cb_testThread,))
+    
+###############################################################################################
+###############################################################################################
+
 try:
     from pubsub import setupkwargs
 except ImportError:
@@ -672,7 +693,10 @@ class SCS_AddFrame(wx.Frame):
     def OnChangeSelAddRow(self, event):
         self.loadFacilityNodesLbox(self.addCboxCell.GetValue(),self.addCboxPhase.GetValue(),self.addCboxColumn.GetValue(),self.addCboxRow.GetValue())
     
+
     def OnDiscover(self, event):
+
+        
         self.addLboxDiscovered.DeleteAllItems()
         self.addLboxDiscovered.InsertStringItem(0,"None")
         msg = "Моля, почакайте извършва се откриване на инсталирани управления..."
@@ -1688,6 +1712,12 @@ class SCS_MainFrame(wx.Frame):
         """
         """
         print "Skrit find..."
+        global testThread
+        testThread.start()
+        print "On hidden" , threading.currentThread().getName()
+        return
+    
+        node_discovery()
         q = Queue.Queue()
         if ISALLSTOPPED:
             threadDiscovery = threading.Thread(target = hiddenNodediscovery, args=(q,))
@@ -1697,7 +1727,7 @@ class SCS_MainFrame(wx.Frame):
             print "Towa e threading resultat: ", result
         else:
             print "W momenta rabotqt uprawleniq!!!"
-            
+             
         
 
     def OnButtonLedCtrlPressed(self, event):

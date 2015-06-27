@@ -10,11 +10,15 @@
 # Copyright:    (c) 2013 by Pronix1 Ltd.
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
+import threading
+
+from pygame.time import delay
 __author__="svilen.zlatev"
 __date__ ="$2013-8-25 11:47:08$"
 
 
 import os
+import wx
 import serial
 # from serial.tools import list_ports
 from xbee import XBee,ZigBee
@@ -100,9 +104,10 @@ def getActiveComPort():
         return activeComPortList
     else:
         return []
-    
+#################################################################################
+
+
 def node_discovery():
-    
     comPortList = getActiveComPort()
     if comPortList:
         comPort = comPortList[0].get('name')
@@ -130,8 +135,10 @@ def node_discovery():
     except serial.SerialException as ex:
         text = "Exception: " + ex.__str__()
         return text
-    ser.close()
-    
+    else:
+        ser.close()
+
+
 def xbee_pin(xbeeRemAddr, xbeePin, xbeePinState):
     "Manipulate XBee pins. Input: xbeeRemAddr, xbeePin, xbeePinState. Ex: xbee_pin('0013A200406B5174'.decode('hex'),'D0','ON')"
 
