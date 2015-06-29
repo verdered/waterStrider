@@ -102,16 +102,16 @@ hiddenDiscoveryThread = threading.Thread(target=hiddenDiscoveryThreadBody, args=
 ###############################################################################################
 
 
-
-def hiddenXbeePinThreadBody(callback):
-    """
-    """
-    callback()
-    
-def cb_hiddenXbeePinThread():
-    """
-    """
-    
+# 
+# def hiddenXbeePinThreadBody(callback):
+#     """
+#     """
+#     callback()
+#     
+# def cb_hiddenXbeePinThread():
+#     """
+#     """
+#     
 ##############################################################################################
 ##############################################################################################
     
@@ -1016,6 +1016,8 @@ class SCS_MainFrame(wx.Frame):
     ID_TIMER1 = 2000
     ID_TIMER2 = 2001
     
+    
+    
     def __init__(self, *args, **kwargs):
         """Create the SCS_Frame."""
         kwargs["style"] = wx.DEFAULT_FRAME_STYLE
@@ -1053,8 +1055,12 @@ class SCS_MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnGroupsSet, item)
         MenuBar.Append(GroupsMenu, "Групи")
         HlpMenu = wx.Menu()
-        item = HlpMenu.Append(wx.ID_ADD, text = "Скрито търсене")
+        item = HlpMenu.Append(wx.ID_ANY, text = "Скрито търсене")
         self.Bind(wx.EVT_MENU, self.OnHiddenDiscovery, item)
+        item = HlpMenu.Append(wx.ID_ANY, text = "Скрито IS")
+        self.Bind(wx.EVT_MENU, self.OnHiddenXbeeIs, item)
+        item = HlpMenu.Append(wx.ID_ANY, text = "Скрито PIN")
+        self.Bind(wx.EVT_MENU, self.OnHiddenXbeePin, item)
         item = HlpMenu.Append(wx.ID_ABOUT, text="Относно")
         self.Bind(wx.EVT_MENU, self.OnGenAbout, item)
         MenuBar.Append(HlpMenu,"Помощ")
@@ -1682,10 +1688,13 @@ class SCS_MainFrame(wx.Frame):
         """
         """
         print "Skrit find..."
-        global hiddenDiscoveryThread
-        hiddenDiscoveryThread.start()
-        print "On hidden" , threading.currentThread().getName()
-        return
+        if ISALLSTOPPED:
+            global hiddenDiscoveryThread
+            hiddenDiscoveryThread.start()
+            print "On hidden" , threading.currentThread().getName()
+            return
+        else:
+            SCS_ShowMessage("Автоматичния режим е стартиран! Първо спрете всички управления!",0) 
     
         node_discovery()
         q = Queue.Queue()
@@ -1697,8 +1706,17 @@ class SCS_MainFrame(wx.Frame):
             print "Towa e threading resultat: ", result
         else:
             print "W momenta rabotqt uprawleniq!!!"
-             
+            
+    def OnHiddenXbeeIs(self, event):
+#         try:
+        stateDict = hiddenXbeeChangeState('0013A200406E980D', 'D0', 'OFF') #0013A200406E980F
+        print stateDict
+#         except TypeError:
+#             print "TypeError"
         
+    def OnHiddenXbeePin(self, event):
+        print "HXBPIN"
+
 
     def OnButtonLedCtrlPressed(self, event):
         """

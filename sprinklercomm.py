@@ -11,6 +11,7 @@
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 import threading
+import time
 
 from pygame.time import delay
 __author__="svilen.zlatev"
@@ -33,6 +34,8 @@ import Queue
     
     
 listOfNodes = []
+
+ISCOMMANDINPROCESS = 0
 
 def list_serial_ports():
     # Windows
@@ -280,7 +283,6 @@ def hiddenNodediscovery(q):
         comPort = comPortList[0].get('name')
         timeOut = int(comPortList[0].get('timeout'))
         baudRate = int(comPortList[0].get('baudrate'))
-        count = 0
         
     print "Hidden Discovery"
     
@@ -309,6 +311,9 @@ def hiddenNodediscovery(q):
     else:
         ser.close()
         
+#===============================================================================
+# hiddenXbeePin
+#===============================================================================
 def hiddenXbeePin(xbeeRemAddr, xbeePin, xbeePinState):
     "Manipulate XBee pins. Input: xbeeRemAddr, xbeePin, xbeePinState. Ex: xbee_pin('0013A200406B5174'.decode('hex'),'D0','ON')"
 
@@ -341,27 +346,71 @@ def hiddenXbeePin(xbeeRemAddr, xbeePin, xbeePinState):
         ser.close()
         
        
-def hiddenXbeeIs(xbeeRemAddr):
+#===============================================================================
+# hiddenXbeeIs
+#===============================================================================
+def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState): 
     """
-    XBee IS command implementation. Input: xbeeRemAddr. Ex: xbee_is('0013A200406B5174')
+    XBee IS command implementation. Input: xbeeRemAddr. Ex: state = hiddenXbeeIs('0013A200406B5174', 'D0')
+    Returns: state = True/False
     """
+    startTime = time.time()
+    i = 0
+    timeOut = 3
+    retValue = False
+    
     comPortList = getActiveComPort()
     if comPortList:
         comPort = comPortList[0].get('name')
         timeOut = int(comPortList[0].get('timeout'))
         baudRate = int(comPortList[0].get('baudrate'))
-        count = 0
-
+        
     try:
-        ser = serial.Serial(comPort, baudRate, timeout=timeOut) 
+        ser = serial.Serial(comPort, baudRate, timeout=timeOut)
         xbee = ZigBee(ser,escaped=True)
         
-        xbee.remote_at(dest_addr_long=xbeeRemAddr,command="IS",frame_id="C")
-        response = xbee.wait_read_frame()
-        return response
-    
+        if xbeePinState == 'ON':
+            xbeePinStateHex = '\x05'
+
+        if xbeePinState == 'OFF':
+            xbeePinStateHex = '\x04'
+            
+        while(i < 3 or startTime-time.time()>timeOut):        
+            try:
+                xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command=xbeePin,parameter=xbeePinStateHex)
+                retValue = True
+            except ValueError:
+                print "ValueError 1"
+                retValue = False
+            except TypeError:
+                print "TypeError 1"
+                retValue = False
+        
+            delay(250) # Wait 250ms for network healing
+        
+            try:
+                xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
+                response = xbee.wait_read_frame(250)
+                print "Otgowor", response
+                parametersValue = response.get('parameter', {})
+                if parametersValue <> {}:
+                    print "DIO 0: ", parametersValue[0].get('dio-0')
+                retValue = True
+            except ValueError:
+                print "ValueError 2"
+                retValue = False
+            except TypeError:
+                print "TypeError 2"
+                retValue = False
+            i = i+1
+            print "i = ", i
+
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
-        return 0
+        retValue = False
     else:
-        ser.close()    
+        ser.close()
+        print time.time()-startTime
+############ Tryabwa da go dopisha!!! za obrabotka na !!!
+        return retValue
+    
