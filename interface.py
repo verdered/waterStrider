@@ -25,27 +25,6 @@ from sprinklercomm import *
 import platform
 import threading
 
-################################################################################################
-################################################################################################
-def testThreadBody(callback):
-    for i in range(60):
-        #delay(500)
-        print "I'm in new thread and working fine" , threading.currentThread().getName()
-        #print "thread ID =" , threading.currentThread.ident()
-        print "starting node_discovery()"
-        node_discovery()
-        print "finished node_discovery()"
-        #delay(500)
-        callback()
-        
-def cb_testThread():
-    print "cb_testThread, threadID = ", threading.currentThread().getName()
-
-testThread = threading.Thread(target=testThreadBody, args=(cb_testThread,))
-    
-###############################################################################################
-###############################################################################################
-
 try:
     from pubsub import setupkwargs
 except ImportError:
@@ -95,6 +74,44 @@ ISLEDON = False
 
 # Global variables end
 
+################################################################################################
+################################################################################################
+def hiddenDiscoveryThreadBody(callback):
+    """
+    treaded function for node discovery
+    """
+    for i in range(10):
+        #delay(500)
+        print "I'm in new thread and working fine" , threading.currentThread().getName()
+        #print "thread ID =" , threading.currentThread.ident()
+        print "starting node_discovery()"
+        node_discovery()
+        print "finished node_discovery()"
+        #delay(500)
+        callback()
+        
+def cb_hiddenDiscoveryThread():
+    """
+        callback function for node discovery
+    """
+    print "cb_testThread, threadID = ", threading.currentThread().getName()
+
+hiddenDiscoveryThread = threading.Thread(target=hiddenDiscoveryThreadBody, args=(cb_hiddenDiscoveryThread,))
+    
+###############################################################################################
+###############################################################################################
+
+def hiddenXbeePinThreadBody(callback):
+    """
+    """
+    callback()
+    
+def cb_hiddenXbeePinThread():
+    """
+    """
+    
+
+    
 def toHex(s):
     lst = []
     for ch in s:
@@ -842,13 +859,8 @@ class SCS_TreeCtrl(wx.TreeCtrl):
         self.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded, self)
         self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed, self)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, self)
-        self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.OnBeginEdit, self)
-        self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.OnEndEdit, self)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self)
-
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-        self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
-        self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
         
     def loadXMLtoTree(self):
         """
@@ -915,51 +927,6 @@ class SCS_TreeCtrl(wx.TreeCtrl):
                 (child_2, cookie_2) = self.GetNextChild(child_1, cookie_2)
                 
             (child_1, cookie_1) = self.GetNextChild(root, cookie_1)
-
-    
-    def OnRightDown(self, event):
-        """
-        """
-        pt = event.GetPosition();
-        item, flags = self.HitTest(pt)
-        if item:
-            self.SelectItem(item)
-
-
-    def OnRightUp(self, event):
-        pt = event.GetPosition();
-        item, flags = self.HitTest(pt)
-        if item:
-            self.EditLabel(item)
-
-    def OnBeginEdit(self, event):
-        self.log.WriteText("OnBeginEdit\n")
-        # show how to prevent edit...
-        item = event.GetItem()
-        if item and self.GetItemText(item) == "The Root Item":
-            wx.Bell()
-            # Lets just see what's visible of its children
-            cookie = 0
-            root = event.GetItem()
-            (child, cookie) = self.GetFirstChild(root)
-
-            while child.IsOk():
-                self.log.WriteText("Child [%s] visible = %d" %
-                                   (self.GetItemText(child),
-                                    self.IsVisible(child)))
-                (child, cookie) = self.GetNextChild(root, cookie)
-            event.Veto()
-
-
-    def OnEndEdit(self, event):
-        self.log.WriteText("OnEndEdit: %s %s\n" %
-                           (event.IsEditCancelled(), event.GetLabel()) )
-        # show how to reject edit, we'll not allow any digits
-        for x in event.GetLabel():
-            if x in string.digits:
-                self.log.WriteText("You can't enter digits...\n")
-                event.Veto()
-                return
 
     def OnLeftDClick(self, event):
         """
@@ -1712,8 +1679,8 @@ class SCS_MainFrame(wx.Frame):
         """
         """
         print "Skrit find..."
-        global testThread
-        testThread.start()
+        global hiddenDiscoveryThread
+        hiddenDiscoveryThread.start()
         print "On hidden" , threading.currentThread().getName()
         return
     

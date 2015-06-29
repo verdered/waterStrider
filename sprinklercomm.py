@@ -116,7 +116,7 @@ def node_discovery():
         count = 0
     
     try:
-        ser = serial.Serial(comPort, baudRate, timeout=timeOut) 
+        ser = serial.Serial(comPort, baudRate, timeout=timeOut)
         xbee = ZigBee(ser,escaped=True)
         node_list=[]        
         xbee.at(command='ND')
@@ -285,7 +285,8 @@ def hiddenNodediscovery(q):
     print "Hidden Discovery"
     
     try:
-        ser = serial.Serial(comPort, baudRate, timeout=timeOut) 
+        ser = serial.Serial(comPort, baudRate, timeout=timeOut)
+        print "porta e otworen", ser.isOpen() 
         xbee = ZigBee(ser,escaped=True)
         node_list=[]        
         xbee.at(command='ND')
