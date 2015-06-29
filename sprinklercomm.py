@@ -307,4 +307,61 @@ def hiddenNodediscovery(q):
         text = "Exception: " + ex.__str__()
         return text
     else:
-        ser.close()   
+        ser.close()
+        
+def hiddenXbeePin(xbeeRemAddr, xbeePin, xbeePinState):
+    "Manipulate XBee pins. Input: xbeeRemAddr, xbeePin, xbeePinState. Ex: xbee_pin('0013A200406B5174'.decode('hex'),'D0','ON')"
+
+    comPortList = getActiveComPort()
+    if comPortList:
+        comPort = comPortList[0].get('name')
+        timeOut = int(comPortList[0].get('timeout'))
+        baudRate = int(comPortList[0].get('baudrate'))
+        count = 0
+        
+    try:
+        ser = serial.Serial(comPort, baudRate, timeout=timeOut) 
+        xbee = ZigBee(ser,escaped=True)
+        
+        if xbeePinState == 'ON':
+            xbeePinStateHex = '\x05'
+
+        if xbeePinState == 'OFF':
+            xbeePinStateHex = '\x04'
+            
+        try:
+            xbee.remote_at(dest_addr_long=xbeeRemAddr,command=xbeePin,parameter=xbeePinStateHex)
+        finally:
+            return 1
+    
+    except serial.SerialException as ex:
+        text = "Exception is: " + ex.__str__()
+        return 0
+    else:
+        ser.close()
+        
+       
+def hiddenXbeeIs(xbeeRemAddr):
+    """
+    XBee IS command implementation. Input: xbeeRemAddr. Ex: xbee_is('0013A200406B5174')
+    """
+    comPortList = getActiveComPort()
+    if comPortList:
+        comPort = comPortList[0].get('name')
+        timeOut = int(comPortList[0].get('timeout'))
+        baudRate = int(comPortList[0].get('baudrate'))
+        count = 0
+
+    try:
+        ser = serial.Serial(comPort, baudRate, timeout=timeOut) 
+        xbee = ZigBee(ser,escaped=True)
+        
+        xbee.remote_at(dest_addr_long=xbeeRemAddr,command="IS",frame_id="C")
+        response = xbee.wait_read_frame()
+        return response
+    
+    except serial.SerialException as ex:
+        text = "Exception is: " + ex.__str__()
+        return 0
+    else:
+        ser.close()    
