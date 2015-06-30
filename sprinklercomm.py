@@ -356,7 +356,8 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
     """
     startTime = time.time()
     i = 0
-    timeOut = 3
+    transit = 2
+    timeOut = 0.3
     retValue = False
     
     comPortList = getActiveComPort()
@@ -375,7 +376,7 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
         if xbeePinState == 'OFF':
             xbeePinStateHex = '\x04'
             
-        while(i < 3 or startTime-time.time()>timeOut):        
+        while(i < transit):        
             try:
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command=xbeePin,parameter=xbeePinStateHex)
                 retValue = True
@@ -386,21 +387,26 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
                 print "TypeError 1"
                 retValue = False
         
-            delay(250) # Wait 250ms for network healing
+            delay(200) #Wait 250ms for network healing
         
             try:
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
                 response = xbee.wait_read_frame(250)
                 print "Otgowor", response
                 parametersValue = response.get('parameter', {})
-                if parametersValue <> {}:
-                    print "DIO 0: ", parametersValue[0].get('dio-0')
-                retValue = True
+                print "DIO 0: ", parametersValue[0].get('dio-0')
+                if parametersValue[0].get('dio-0') == False:
+                    retValue = True
+                else:
+                    retValue = True
             except ValueError:
                 print "ValueError 2"
                 retValue = False
             except TypeError:
                 print "TypeError 2"
+                retValue = False
+            except KeyError:
+                print "KeyError 1"
                 retValue = False
             i = i+1
             print "i = ", i

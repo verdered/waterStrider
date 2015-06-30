@@ -101,17 +101,18 @@ hiddenDiscoveryThread = threading.Thread(target=hiddenDiscoveryThreadBody, args=
 ###############################################################################################
 ###############################################################################################
 
-
-# 
-# def hiddenXbeePinThreadBody(callback):
-#     """
-#     """
-#     callback()
-#     
-# def cb_hiddenXbeePinThread():
-#     """
-#     """
-#     
+  
+ 
+def hiddenXbeePinThreadBody(callback):
+    """
+    """
+    callback()
+     
+def cb_hiddenXbeePinThread():
+    """
+    """
+     
+     
 ##############################################################################################
 ##############################################################################################
     
@@ -354,9 +355,12 @@ class SCS_GroupsFrame(wx.Frame):
             if groups_list.get('cell')==cell_name and groups_list.get('phase')==phase_name:
                 for group in groups_list:
                     if group.get('name')==group_name:
-                        for node in group:
-                            self.groupLboxNodes.Append(node.text)
-                            
+                        try:
+                            for node in group:
+                                self.groupLboxNodes.Append(node.text)
+                        except TypeError:
+                            print "greshka"
+
     def removeNodeLbox(self,cell_name, phase_name, group_name, node_name):
         """
         """
@@ -381,7 +385,6 @@ class SCS_GroupsFrame(wx.Frame):
                         node_new.text = node_name
                                 
         SCS_ShowMessage("Елементът е добавен успешно!",0)
-
 
     def OnMarkGroup(self,event):
         group_name_sel = self.groupLboxGroups.GetString(self.groupLboxGroups.GetSelection())
@@ -1709,10 +1712,9 @@ class SCS_MainFrame(wx.Frame):
             
     def OnHiddenXbeeIs(self, event):
 #         try:
-        stateDict = hiddenXbeeChangeState('0013A200406E980D', 'D0', 'OFF') #0013A200406E980F
+        stateDict = hiddenXbeeChangeState('0013A200406E980F', 'D0', 'ON') #0013A200406E980F
         print stateDict
-#         except TypeError:
-#             print "TypeError"
+
         
     def OnHiddenXbeePin(self, event):
         print "HXBPIN"
@@ -2078,12 +2080,11 @@ class SCS_MainFrame(wx.Frame):
         if itemList:
             for node in itemList:
                 print "Now stopping %s" %node
-                xbee_pin(node.decode('hex'),'D0','OFF')
-                xbee_pin(node.decode('hex'),'D0','OFF')
-#                 xbee_pin(node.decode('hex'),'D0','OFF')
-#                 xbee_pin(node.decode('hex'),'D0','OFF')               
-#                 xbee_is(node.decode('hex'))
-                self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)                
+                xbeeState = hiddenXbeeChangeState(node,"D0","OFF")
+                if xbeeState:
+                    self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
+                else:
+                    self.Sp_TreeCtrl.changeItemColor(node, wx.RED)
         
         PREVIOUS_GROUP = []
         
@@ -2094,12 +2095,11 @@ class SCS_MainFrame(wx.Frame):
         if itemList:
             for node in itemList:
                 print "Now stopping %s" %node
-                xbee_pin(node.decode('hex'),'D0','OFF')
-                xbee_pin(node.decode('hex'),'D0','OFF')  
-#                 xbee_pin(node.decode('hex'),'D0','OFF')
-#                 xbee_pin(node.decode('hex'),'D0','OFF')               
-#                 xbee_is(node.decode('hex'))
-                self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)                
+                xbeeState = hiddenXbeeChangeState(node,"D0","OFF")
+                if xbeeState:
+                    self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
+                else:
+                    self.Sp_TreeCtrl.changeItemColor(node, wx.RED)                
         
         PREVIOUS_GROUP2 = []
         
@@ -2107,13 +2107,10 @@ class SCS_MainFrame(wx.Frame):
         """ Starts selected item """
         
         print "Starting %s" %longItemAddress
-        for i in range(2):
-            xbee_pin(longItemAddress.decode('hex'),"D0","ON")
-            xbee_pin(longItemAddress.decode('hex'),"D0","ON")
-        xbee_state = xbee_is(longItemAddress.decode('hex'))
-        self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.RED)
-        if xbee_state:
-            self.showItemInfo(parseXbeeIsResponse(xbee_state))
+        xbeeState = hiddenXbeeChangeState(longItemAddress,"D0","ON")
+        if xbeeState:
+            self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.RED)
+#             self.showItemInfo(parseXbeeIsResponse(xbee_state))
         else:
             try:
                 self.showItemInfo(False,{})
@@ -2126,20 +2123,19 @@ class SCS_MainFrame(wx.Frame):
         """ Stops selected item """
         
         print "Stopping %s" %longItemAddress
-        for i in range(2):
-            xbee_pin(longItemAddress.decode('hex'),"D0","OFF")
-            xbee_pin(longItemAddress.decode('hex'),"D0","OFF")
-        xbee_state = xbee_is(longItemAddress.decode('hex'))
-        self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
-        if xbee_state:
-            self.showItemInfo(parseXbeeIsResponse(xbee_state))
+        xbeeState = hiddenXbeeChangeState(longItemAddress,"D0","OFF")
+        print "Sled stop", xbeeState
+        if xbeeState:
+            self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
+#             self.showItemInfo(parseXbeeIsResponse(xbee_state))
             self.SCS_Frame_statusbar.SetStatusText("",0)
+            print "Sled True:", xbeeState
         else:
             try:
                 self.showItemInfo(False,{})
                 self.SCS_Frame_statusbar.SetStatusText("",0)
             except TypeError:
-                pass
+                print "TypeError during Stop"
             SCS_ShowMessage("Xbee: Изтекло време за отговор!",0)
             self.SCS_Frame_statusbar.SetStatusText("",0)
 
@@ -2155,11 +2151,12 @@ class SCS_MainFrame(wx.Frame):
             try:
                 if FACILITY_MAP[GROUPS_DICT[group_name][node]] != 'None':
                     print "Now is running %s" %FACILITY_MAP[GROUPS_DICT[group_name][node]]
-                    xbee_pin(FACILITY_MAP[GROUPS_DICT[group_name][node]].decode('hex'),'D0','ON')
-                    xbee_pin(FACILITY_MAP[GROUPS_DICT[group_name][node]].decode('hex'),'D0','ON')
-                    xbee_is(FACILITY_MAP[GROUPS_DICT[group_name][node]].decode('hex'))
+                    xbeeState = hiddenXbeeChangeState(FACILITY_MAP[GROUPS_DICT[group_name][node]],"D0","ON")
                     PREVIOUS_GROUP.append(FACILITY_MAP[GROUPS_DICT[group_name][node]])
-                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP[GROUPS_DICT[group_name][node]], wx.RED)
+                    if xbeeState:
+                        self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP[GROUPS_DICT[group_name][node]], wx.RED)
+                    else:
+                        self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP[GROUPS_DICT[group_name][node]], wx.BLACK)
             except KeyError:
                 print "Node is unavilable!"
                 self.SCS_Frame_statusbar.SetStatusText("...",0) 
@@ -2178,13 +2175,12 @@ class SCS_MainFrame(wx.Frame):
             try:
                 if FACILITY_MAP2[GROUPS_DICT2[group_name][node]] != 'None':
                     print "Now is running %s" %FACILITY_MAP2[GROUPS_DICT2[group_name][node]]
-                    xbee_pin(FACILITY_MAP2[GROUPS_DICT2[group_name][node]].decode('hex'),'D0','ON')
-                    xbee_pin(FACILITY_MAP2[GROUPS_DICT2[group_name][node]].decode('hex'),'D0','ON')
-#                     xbee_pin(FACILITY_MAP2[GROUPS_DICT2[group_name][node]].decode('hex'),'D1','ON')
-#                     xbee_pin(FACILITY_MAP2[GROUPS_DICT2[group_name][node]].decode('hex'),'D1','ON')
-                    xbee_is(FACILITY_MAP2[GROUPS_DICT2[group_name][node]].decode('hex'))
+                    xbeeState = hiddenXbeeChangeState(FACILITY_MAP2[GROUPS_DICT2[group_name][node]],"D0","ON")
                     PREVIOUS_GROUP2.append(FACILITY_MAP2[GROUPS_DICT2[group_name][node]])
-                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], wx.RED)
+                    if xbeeState:
+                        self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], wx.RED)
+                    else:
+                        self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], wx.BLACK)
             except KeyError:
                 print "Node is unavilable!"
                 self.SCS_Frame_statusbar.SetStatusText("...",0) 
