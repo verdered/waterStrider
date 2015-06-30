@@ -868,6 +868,9 @@ class SCS_TreeCtrl(wx.TreeCtrl):
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         
+    #===========================================================================
+    # loadXMLtoTree
+    #===========================================================================
     def loadXMLtoTree(self):
         """
         """
@@ -908,10 +911,13 @@ class SCS_TreeCtrl(wx.TreeCtrl):
                     item = self.AppendItem(last,  node_params)
                     self.SetPyData(item, None)
                     self.SetItemImage(item, fileidx, wx.TreeItemIcon_Normal)
-                    self.SetItemImage(item, smileidx, wx.TreeItemIcon_Selected)
+#                     self.SetItemImage(item, smileidx, wx.TreeItemIcon_Selected)
                     
         self.ExpandAll()
         
+    #===========================================================================
+    # changeItemColor
+    #===========================================================================
     def changeItemColor(self, longAddress, itemColor):
         """
         """
@@ -930,10 +936,36 @@ class SCS_TreeCtrl(wx.TreeCtrl):
                         self.SetItemTextColour(child_3, itemColor)
                     (child_3, cookie_3) = self.GetNextChild(child_2, cookie_3)                
                 
-                (child_2, cookie_2) = self.GetNextChild(child_1, cookie_2)
+                (child_2, cookie_2) = self.GetNextChild(child_1, cookie_2)  
+            (child_1, cookie_1) = self.GetNextChild(root, cookie_1)
+            
+    #===========================================================================
+    # changeItemImage
+    #===========================================================================
+    def changeItemImage(self, longAddress, itemImage):
+        """
+        """
+        root = self.GetRootItem()
+        (child_1, cookie_1) = self.GetFirstChild(root)
+        while child_1.IsOk():
+            (child_2, cookie_2) = self.GetFirstChild(child_1)
+            while child_2.IsOk():
+                (child_3, cookie_3) = self.GetFirstChild(child_2)
+                while child_3.IsOk():
+                    try:
+                        itemLongAddress = processLongAddress(self.GetItemText(child_3))
+                    except ValueError:
+                        pass
+                    if itemLongAddress == longAddress:
+                        self.SetItemImage(child_3, itemImage)
+                    (child_3, cookie_3) = self.GetNextChild(child_2, cookie_3)                
                 
+                (child_2, cookie_2) = self.GetNextChild(child_1, cookie_2)  
             (child_1, cookie_1) = self.GetNextChild(root, cookie_1)
 
+    #===========================================================================
+    # OnLeftDClick
+    #===========================================================================
     def OnLeftDClick(self, event):
         """
         """
@@ -959,22 +991,34 @@ class SCS_TreeCtrl(wx.TreeCtrl):
         except ValueError:
             SCS_ShowMessage("Няма избран валиден елемент!",0)
 
+    #===========================================================================
+    # OnSize
+    #===========================================================================
     def OnSize(self, event):
         w,h = self.GetClientSizeTuple()
         self.tree.SetDimensions(0, 0, w, h)
 
+    #===========================================================================
+    # OnItemExpanded
+    #===========================================================================
     def OnItemExpanded(self, event):
         item = event.GetItem()
         if item:
             pass
             # self.WriteText("OnItemExpanded: %s\n" % self.tree.GetItemText(item))
 
+    #===========================================================================
+    # OnItemCollapsed
+    #===========================================================================
     def OnItemCollapsed(self, event):
         item = event.GetItem()
         if item:
             pass
             # self.WriteText("OnItemCollapsed: %s\n" % self.tree.GetItemText(item))
 
+    #===========================================================================
+    # OnSelChanged
+    #===========================================================================
     def OnSelChanged(self, event):
         
         global TREECTRL_ELEMENT_SELECTED 
@@ -1006,6 +1050,9 @@ class SCS_TreeCtrl(wx.TreeCtrl):
         pub.sendMessage('show.history', events_d = events_dict)
         pub.sendMessage('show.version', infob = infobox)
 
+    #===========================================================================
+    # OnActivate
+    #===========================================================================
     def OnActivate(self, event):
         if self.item:
             print("OnActivate: %s\n" % self.GetItemText(self.item))
