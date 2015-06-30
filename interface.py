@@ -880,8 +880,9 @@ class SCS_TreeCtrl(wx.TreeCtrl):
         il = wx.ImageList(isz[0], isz[1])
         fldridx     = il.Add(icons.antenna32_32_ico.GetBitmap())
         fldropenidx = il.Add(icons.antenna32_32_ico.GetBitmap())
-        fileidx     = il.Add(icons.fountain32_32_active_ico.GetBitmap())
-        smileidx    = il.Add(icons.fountain32_32_unactive_ico.GetBitmap())
+        self.startedXbee     = il.Add(icons.fountain32_32_active_ico.GetBitmap())
+        self.stoppedXbee    = il.Add(icons.fountain32_32_unactive__ico.GetBitmap())
+        self.errorXbee = il.Add(icons.fountain32_32_error_ico.GetBitmap())
 
         self.SetImageList(il)
         self.il = il
@@ -910,7 +911,7 @@ class SCS_TreeCtrl(wx.TreeCtrl):
                     node_params = wdf_node.get('name') + ' : ' + wdf_node.text.strip()
                     item = self.AppendItem(last,  node_params)
                     self.SetPyData(item, None)
-                    self.SetItemImage(item, fileidx, wx.TreeItemIcon_Normal)
+                    self.SetItemImage(item, self.stoppedXbee, wx.TreeItemIcon_Normal)
 #                     self.SetItemImage(item, smileidx, wx.TreeItemIcon_Selected)
                     
         self.ExpandAll()
@@ -2130,8 +2131,10 @@ class SCS_MainFrame(wx.Frame):
                 xbeeState = hiddenXbeeChangeState(node,"D0","OFF")
                 if xbeeState:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.stoppedXbee)
                 else:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.RED)
+                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.startedXbee)
         
         PREVIOUS_GROUP = []
         
@@ -2145,8 +2148,10 @@ class SCS_MainFrame(wx.Frame):
                 xbeeState = hiddenXbeeChangeState(node,"D0","OFF")
                 if xbeeState:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.stoppedXbee)
                 else:
-                    self.Sp_TreeCtrl.changeItemColor(node, wx.RED)                
+                    self.Sp_TreeCtrl.changeItemColor(node, wx.RED)
+                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.startedXbee)                
         
         PREVIOUS_GROUP2 = []
         
@@ -2157,6 +2162,7 @@ class SCS_MainFrame(wx.Frame):
         xbeeState = hiddenXbeeChangeState(longItemAddress,"D0","ON")
         if xbeeState:
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.RED)
+            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.startedXbee)
 #             self.showItemInfo(parseXbeeIsResponse(xbee_state))
         else:
             try:
@@ -2165,6 +2171,7 @@ class SCS_MainFrame(wx.Frame):
                 pass               
             SCS_ShowMessage("Xbee: Изтекло време за отговор!",0)
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
+            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.stoppedXbee)
         
     def stopItem(self, longItemAddress):
         """ Stops selected item """
@@ -2174,6 +2181,7 @@ class SCS_MainFrame(wx.Frame):
         print "Sled stop", xbeeState
         if xbeeState:
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
+            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.stoppedXbee)
 #             self.showItemInfo(parseXbeeIsResponse(xbee_state))
             self.SCS_Frame_statusbar.SetStatusText("",0)
             print "Sled True:", xbeeState
