@@ -356,7 +356,7 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
     """
     startTime = time.time()
     i = 0
-    transit = 2
+    transit = 3
     timeOut = 0.3
     retValue = False
     
@@ -382,10 +382,10 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
                 retValue = True
             except ValueError:
                 print "ValueError 1"
-                retValue = False
+                retValue = 1
             except TypeError:
                 print "TypeError 1"
-                retValue = False
+                retValue = 2
         
             delay(200) #Wait 250ms for network healing
         
@@ -393,27 +393,32 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
                 response = xbee.wait_read_frame(250)
                 print "Otgowor", response
+                try:
+                    sample = response.get('sample',{})
+                    print sample
+                except KeyError:
+                    retValue = 9
                 parametersValue = response.get('parameter', {})
                 print "DIO 0: ", parametersValue[0].get('dio-0')
-                if parametersValue[0].get('dio-0') == False:
-                    retValue = True
+                if parametersValue[0].get('dio-0') == True:
+                    retValue = 3
                 else:
-                    retValue = True
+                    retValue = 4
             except ValueError:
                 print "ValueError 2"
-                retValue = False
+                retValue = 5
             except TypeError:
                 print "TypeError 2"
-                retValue = False
+                retValue = 6
             except KeyError:
                 print "KeyError 1"
-                retValue = False
+                retValue = 7
             i = i+1
             print "i = ", i
 
     except serial.SerialException as ex:
         text = "Exception is: " + ex.__str__()
-        retValue = False
+        retValue = 8
     else:
         ser.close()
         print time.time()-startTime

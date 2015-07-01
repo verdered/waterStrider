@@ -4,14 +4,14 @@
         Cell 1
 	<phase name="Phase 1">
 		Phase 1
-		<node mode="0" name="2.8" sp="S_112">0013A200409C30E9</node>
-		<node mode="0" name="3.2" sp="S_163">0013A2004091C9F3</node>
-		<node mode="0" name="3.3" sp="S_148">0013A2004049B0BE</node>
-		<node mode="0" name="3.4" sp="S_135">0013A200409C3002</node>
-		<node mode="0" name="3.5" sp="S_23">0013A2004091CA0E</node>     
-		<node mode="0" name="4.3" sp="S_147">0013A200409C2FF4</node>
-		<node mode="0" name="4.4" sp="S_170">0013A2004091C9D0</node>
-		<node mode="0" name="4.5" sp=" TEST">0013A200406E980F</node>     
+		<node mode="0" name="2.8" sp=" TEST">0013A200406E980F</node>
+		<node mode="0" name="3.2" sp="">None</node>
+		<node mode="0" name="3.3" sp="">None</node>
+		<node mode="0" name="3.4" sp="">None</node>
+		<node mode="0" name="3.5" sp="">None</node>     
+		<node mode="0" name="4.3" sp="S_38">0013A200406E9878</node>
+		<node mode="0" name="4.4" sp="S_118">0013A200409C2FF7</node>
+		<node mode="0" name="4.5" sp="S_19">0013A200406E9734</node>     
 		<node mode="0" name="4.6" sp="S_12">0013A200406E9733</node>
 		<node mode="0" name="5.2" sp="">None</node>
 		<node mode="0" name="5.3" sp="">None</node>
@@ -243,27 +243,27 @@
   
   <groups cell="Cell 1" phase="Phase 1">
     <group name="Group 2" state="0">
-	<node>3.3</node><node>4.3</node><node /></group>  
+	<node>2.8</node><node>4.6</node><node>4.3</node><node>4.4</node><node>4.5</node></group>  
     <group name="Group 3" state="0">
-	<node>3.4</node><node>4.4</node><node /></group>
+	</group>
     <group name="Group 4" state="0">
-	<node>3.5</node><node>4.5</node><node /><node /></group>
+	</group>
     <group name="Group 5" state="0">
-	<node>3.6</node><node /></group>
+	</group>
     <group name="Group 6" state="0">
-	<node>7.2</node><node>6.2</node><node /></group>
+	</group>
     <group name="Group 7" state="0">
-	<node>5.3</node><node>6.3</node><node>7.3</node><node /></group>
+	</group>
     <group name="Group 8" state="0">
-	<node>5.4</node><node>6.4</node><node>7.4</node><node /></group>  
+	</group>  
     <group name="Group 9" state="0">
-	<node>5.5</node><node>6.5</node><node>7.5</node><node /></group>
+	</group>
     <group name="Group 10" state="0">
-	<node>5.6</node><node>6.6</node><node>7.6</node><node /></group>
+	</group>
     <group name="Group 11" state="0">
-	<node>6.7</node><node>7.7</node><node /></group>
+	</group>
     <group name="Group 12" state="0">
-	<node>6.8</node><node>7.8</node><node /></group>
+	</group>
   </groups>
   
   <groups cell="Cell 1" phase="Phase 2">
