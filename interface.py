@@ -99,9 +99,39 @@ def cb_hiddenDiscoveryThread():
 hiddenDiscoveryThread = threading.Thread(target=hiddenDiscoveryThreadBody, args=(cb_hiddenDiscoveryThread,))
     
 ###############################################################################################
+
+# ETO TUKA IMA MNOGO RABOTA
+
 ###############################################################################################
  
-hiddenXbeeChangeStateQueue = Queue.Queue()
+hiddenXbeeChangeStateQueueIN = Queue.Queue()
+hiddenXbeeChangeStateQueueOUT = Queue.Queue()
+
+#===============================================================================
+# hiddenXbeeChangeStateThreadBody
+#===============================================================================
+def hiddenXbeeChangeStateThreadBody(callback):
+    """
+    treaded function for node discovery
+    """
+    global hiddenXbeeChangeStateQueueIN
+    global hiddenXbeeChangeStateQueueOUT
+    
+    while not hiddenXbeeChangeStateQueueIN.empty():
+        print "I'm in new thread and working fine" , threading.currentThread().getName()
+        #print "thread ID =" , threading.currentThread.ident()
+        print "starting node_discovery()"
+        
+        print "finished node_discovery()"
+        #delay(500)
+        
+        callback()
+        
+def cb_hiddenXbeeChangeStateThread():
+    """
+        callback function for node discovery
+    """
+    print "cb_testThread, threadID = ", threading.currentThread().getName()
 
 class hiddenXbeeChangeStateThread(threading.Thread):
     """
