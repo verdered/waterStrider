@@ -100,18 +100,24 @@ hiddenDiscoveryThread = threading.Thread(target=hiddenDiscoveryThreadBody, args=
     
 ###############################################################################################
 ###############################################################################################
-
-  
  
-def hiddenXbeePinThreadBody(callback):
+hiddenXbeeChangeStateQueue = Queue.Queue()
+
+class hiddenXbeeChangeStateThread(threading.Thread):
     """
+        A thread class that will start/stop Xbee module and will return Xbee state
     """
-    callback()
-     
-def cb_hiddenXbeePinThread():
-    """
-    """
-     
+   
+    def __init__ (self, longAddress, pinXbee, statePin, q):
+        self.longAddr = longAddress
+        self.pin = pinXbee
+        self.state = statePin
+        self.q = q
+        threading.Thread.__init__ (self)
+   
+    def run(self):
+        result = hiddenXbeeChangeState(self.longAddr, self.pin, self.state)
+        self.q.put(result)
      
 ##############################################################################################
 ##############################################################################################
@@ -1113,7 +1119,7 @@ class SCS_MainFrame(wx.Frame):
         item = HlpMenu.Append(wx.ID_ANY, text = "Скрито търсене")
         self.Bind(wx.EVT_MENU, self.OnHiddenDiscovery, item)
         item = HlpMenu.Append(wx.ID_ANY, text = "Скрито IS")
-        self.Bind(wx.EVT_MENU, self.OnHiddenXbeeIs, item)
+        self.Bind(wx.EVT_MENU, self.OnHiddenXbeeChangeState, item)
         item = HlpMenu.Append(wx.ID_ANY, text = "Скрито PIN")
         self.Bind(wx.EVT_MENU, self.OnHiddenXbeePin, item)
         item = HlpMenu.Append(wx.ID_ABOUT, text="Относно")
@@ -1750,6 +1756,7 @@ class SCS_MainFrame(wx.Frame):
             return
         else:
             SCS_ShowMessage("Автоматичния режим е стартиран! Първо спрете всички управления!",0) 
+        return
     
         node_discovery()
         q = Queue.Queue()
@@ -1762,10 +1769,19 @@ class SCS_MainFrame(wx.Frame):
         else:
             print "W momenta rabotqt uprawleniq!!!"
             
-    def OnHiddenXbeeIs(self, event):
-#         try:
-        stateDict = hiddenXbeeChangeState('0013A200406E980F', 'D0', 'ON') #0013A200406E980F
-        print stateDict
+    def OnHiddenXbeeChangeState(self, event):
+        
+        global hiddenXbeeChangeStateQueue
+        
+        hiddenXbeeCS = hiddenXbeeChangeStateThread('0013A200406E980D', 'D0', 'ON', hiddenXbeeChangeStateQueue)
+        hiddenXbeeCS.start()
+        print "OnHiddenXbeeChangeState: ", threading.currentThread().getName()
+        while not hiddenXbeeChangeStateQueue.empty():
+            print "Queue: ", hiddenXbeeChangeStateQueue.get()
+        print "While is ended"
+        
+#         stateDict = hiddenDiscoveryThread('0013A200406E980F', 'D0', 'ON') #0013A200406E980F
+#         print stateDict
 
         
     def OnHiddenXbeePin(self, event):
@@ -2153,7 +2169,7 @@ class SCS_MainFrame(wx.Frame):
                     self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.errorXbee)            
                 elif xbeeState == 7:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
-                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.disconnectedXbee)            
+                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.errorXbee)            
                 elif xbeeState == 8:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
                     self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.errorXbee)
@@ -2196,7 +2212,7 @@ class SCS_MainFrame(wx.Frame):
                     self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.errorXbee)            
                 elif xbeeState == 7:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
-                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.disconnectedXbee)            
+                    self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.errorXbee)            
                 elif xbeeState == 8:
                     self.Sp_TreeCtrl.changeItemColor(node, wx.BLACK)
                     self.Sp_TreeCtrl.changeItemImage(node, self.Sp_TreeCtrl.errorXbee)
@@ -2239,7 +2255,7 @@ class SCS_MainFrame(wx.Frame):
             self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.errorXbee)            
         elif xbeeState == 7:
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
-            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.disconnectedXbee)            
+            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.errorXbee)            
         elif xbeeState == 8:
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
             self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.errorXbee)
@@ -2280,7 +2296,7 @@ class SCS_MainFrame(wx.Frame):
             self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.errorXbee)            
         elif xbeeState == 7:
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
-            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.disconnectedXbee)            
+            self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.errorXbee)            
         elif xbeeState == 8:
             self.Sp_TreeCtrl.changeItemColor(longItemAddress, wx.BLACK)
             self.Sp_TreeCtrl.changeItemImage(longItemAddress, self.Sp_TreeCtrl.errorXbee)
@@ -2330,7 +2346,7 @@ class SCS_MainFrame(wx.Frame):
                         self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP[GROUPS_DICT[group_name][node]], self.Sp_TreeCtrl.errorXbee)            
                     elif xbeeState == 7:
                         self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP[GROUPS_DICT[group_name][node]], wx.BLACK)
-                        self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP[GROUPS_DICT[group_name][node]], self.Sp_TreeCtrl.disconnectedXbee)            
+                        self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP[GROUPS_DICT[group_name][node]], self.Sp_TreeCtrl.errorXbee)            
                     elif xbeeState == 8:
                         self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP[GROUPS_DICT[group_name][node]], wx.BLACK)
                         self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP[GROUPS_DICT[group_name][node]], self.Sp_TreeCtrl.errorXbee)
@@ -2376,7 +2392,7 @@ class SCS_MainFrame(wx.Frame):
                         self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], self.Sp_TreeCtrl.errorXbee)            
                     elif xbeeState == 7:
                         self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], wx.BLACK)
-                        self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], self.Sp_TreeCtrl.disconnectedXbee)            
+                        self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], self.Sp_TreeCtrl.errorXbee)            
                     elif xbeeState == 8:
                         self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], wx.BLACK)
                         self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2[GROUPS_DICT2[group_name][node]], self.Sp_TreeCtrl.errorXbee)
@@ -2465,32 +2481,79 @@ class SCS_MainFrame(wx.Frame):
         self.stopGroup2(PREVIOUS_GROUP2)
     
     def stopAll(self):
-        
+        """
+        """
         global FACILITY_MAP
         global ISALLSTOPPED
-        global FACILITY_MAP2
+        global FACILITY_MAP2        
     
         self.buildFacilityMap('Cell 1','Phase 1')
         self.SCS_Frame_statusbar.SetStatusText("Протича спиране на всички управления от Клетка 1...",0)
         for node in FACILITY_MAP:
             print FACILITY_MAP.get(node)
             if FACILITY_MAP.get(node)!='None':
-                xbee_pin(FACILITY_MAP.get(node).decode('hex'),'D0','OFF')
-                xbee_pin(FACILITY_MAP.get(node).decode('hex'),'D0','OFF')
-#                 xbee_pin(FACILITY_MAP.get(node).decode('hex'),'D0','OFF')
-                xbee_is(FACILITY_MAP.get(node).decode('hex'))               
-                self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                xbeeState = hiddenXbeeChangeState(FACILITY_MAP.get(node),"D0","OFF")
+                if xbeeState == 1:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 2:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.disconnectedXbee)            
+                elif xbeeState == 3:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.RED)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.startedXbee)
+                elif xbeeState == 4:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.stoppedXbee)            
+                elif xbeeState == 5:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 6:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 7:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 8:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.errorXbee)
+                else:
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP.get(node), self.Sp_TreeCtrl.disconnectedXbee)
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP.get(node), wx.BLACK)
         
         self.buildFacilityMap2('Cell 2', 'Phase 1')
         self.SCS_Frame_statusbar.SetStatusText("Протича спиране на всички управления от Клетка 2...",0)
         for node in FACILITY_MAP2:
             print FACILITY_MAP2.get(node)
             if FACILITY_MAP2.get(node)!='None':
-                xbee_pin(FACILITY_MAP2.get(node).decode('hex'),'D0','OFF')
-                xbee_pin(FACILITY_MAP2.get(node).decode('hex'),'D0','OFF')
-#                 xbee_pin(FACILITY_MAP2.get(node).decode('hex'),'D0','OFF')
-                xbee_is(FACILITY_MAP2.get(node).decode('hex'))
-                self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                xbeeState = hiddenXbeeChangeState(FACILITY_MAP2.get(node),"D0","OFF")
+                if xbeeState == 1:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 2:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.disconnectedXbee)            
+                elif xbeeState == 3:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.RED)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.startedXbee)
+                elif xbeeState == 4:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.stoppedXbee)            
+                elif xbeeState == 5:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 6:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 7:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.errorXbee)            
+                elif xbeeState == 8:
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.errorXbee)
+                else:
+                    self.Sp_TreeCtrl.changeItemImage(FACILITY_MAP2.get(node), self.Sp_TreeCtrl.disconnectedXbee)
+                    self.Sp_TreeCtrl.changeItemColor(FACILITY_MAP2.get(node), wx.BLACK)
                 
         self.SCS_Frame_statusbar.SetStatusText("Всички управления са спрени!",0)
         ISALLSTOPPED = 1
@@ -2615,7 +2678,7 @@ class SCS_MainFrame(wx.Frame):
         
         ISSTARTED = 0
         ISALLSTOPPED = 1
-# Трябва да се унифицира
+# Must be unified
         if self.timer1.IsRunning():
             self.timer1.Stop()
         else:
@@ -2626,7 +2689,6 @@ class SCS_MainFrame(wx.Frame):
             pass
         
         self.stopAll()
-        SCS_ShowMessage("Стоп сигналът е изпратен до всички управления!",0)
         self.SCS_Frame_statusbar.SetStatusText("Всички управления са спрени!",0)
 
     def OnButtonPausePressed(self, event):

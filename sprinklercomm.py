@@ -273,8 +273,10 @@ def xbee_tp(xbeeRemAddr):
         return 0
     else:
         ser.close() 
-        
+
+################################################################################        
 ######################### Threaded #############################################
+################################################################################
         
 def hiddenNodediscovery(q):
     
@@ -347,7 +349,7 @@ def hiddenXbeePin(xbeeRemAddr, xbeePin, xbeePinState):
         
        
 #===============================================================================
-# hiddenXbeeIs
+# hiddenXbeeIs IT'S WORKING!!!
 #===============================================================================
 def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState): 
     """
@@ -395,7 +397,7 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
                 print "Otgowor", response
                 try:
                     sample = response.get('sample',{})
-                    print sample
+                    print "Sample", sample
                 except KeyError:
                     retValue = 9
                 parametersValue = response.get('parameter', {})
