@@ -381,7 +381,6 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
         while(i < transit):        
             try:
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command=xbeePin,parameter=xbeePinStateHex)
-                retValue = True
             except ValueError:
                 print "ValueError 1"
                 retValue = 1
@@ -394,24 +393,30 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
             try:
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
                 response = xbee.wait_read_frame(250)
-                print "Otgowor", response
 
                 #===============================================================
                 # try: Tuka tryabwa da analiziram kljucha 'samples'
                 #===============================================================
                 try:
                     sample = response.get('samples',[])
-                    print "Sample", sample[0]
+                    print "Sample", sample
                 except KeyError:
                     retValue = 9
                 parametersValue = response.get('parameter', [])
-                print "DIO 0: ", parametersValue[0].get('dio-0')
-                if parametersValue[0].get('dio-0') == True:
-                    retValue = 3
-                else:
-                    retValue = 4
+                
+                try:
+                    print "DIO 0: ", parametersValue[0].get('dio-0')
+                    if parametersValue[0].get('dio-0') == True:
+                        retValue = 3
+                        i = 10
+                    else:
+                        retValue = 4
+                        i = 10
+                except IndexError:
+                    retValue = 10   # No key to get list parameter
+                    
             except ValueError:
-                print "ValueError 2"
+                print "ValueError 2: ", response
                 retValue = 5
             except TypeError:
                 print "TypeError 2"

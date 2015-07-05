@@ -34,12 +34,12 @@
         <active>active</active>
         <cell>Cell 1</cell>
         <phase>Phase 1</phase>
-	<baudrate>115200</baudrate>
-	<databits>8</databits>
+		<baudrate>115200</baudrate>
+		<databits>8</databits>
         <parity>None</parity>
-	<stopbits>1</stopbits>
-	<flowcontrol>None</flowcontrol>
-	<timeout>10</timeout>
+		<stopbits>1</stopbits>
+		<flowcontrol>None</flowcontrol>
+		<timeout>10</timeout>
         <os>linux</os>
   </com>
  
