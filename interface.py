@@ -99,7 +99,6 @@ def cb_hiddenDiscoveryThread():
 hiddenDiscoveryThread = threading.Thread(target=hiddenDiscoveryThreadBody, args=(cb_hiddenDiscoveryThread,))
     
 ###############################################################################################
-
 # ETO TUKA IMA MNOGO RABOTA
 
 ###############################################################################################

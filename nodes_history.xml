@@ -8,10 +8,10 @@
 	<node cell="Cell 1" name="3.4" phase="Phase 1" sp="" ver="1.0" />
 	<node cell="Cell 1" name="3.5" phase="Phase 1" sp="SPRINKLER_120" ver="2.0" />
 	<node cell="Cell 1" name="3.6" phase="Phase 1" sp="" ver="4.0"><event timestamp="2014-10-29 11:58:54">Ala bala lala bala</event><event timestamp="2014-10-29 12:00:52">23123214214234</event><event timestamp="2014-10-29 12:04:31" /><event timestamp="2014-10-29 12:05:58" /><event timestamp="2014-10-29 12:06:10" /><event timestamp="2014-10-29 12:53:59" /><event timestamp="2014-10-29 12:54:38" /><event timestamp="2014-10-29 12:58:27" /></node>
-	<node cell="Cell 1" name="4.3" phase="Phase 1" sp="S_140" ver="4.0"><event timestamp="2014-10-15 10:02:21">Проба</event><event timestamp="2014-10-15 10:03:08">Проба на програмата</event><event timestamp="2014-10-29 19:05:31" /><event timestamp="2015-06-10 19:02:23">смяна на у-е</event><event timestamp="2015-06-10 19:02:41">Смяна на версията</event></node>
-	<node cell="Cell 1" name="4.4" phase="Phase 1" sp="S_106" ver="1.0"><event timestamp="2014-10-29 12:57:30" /><event timestamp="2014-10-29 12:58:13" /></node>
-	<node cell="Cell 1" name="4.5" phase="Phase 1" sp="" ver="4.0"><event timestamp="2014-10-29 12:04:45" /><event timestamp="2014-10-29 12:55:37" /></node>
-	<node cell="Cell 1" name="4.6" phase="Phase 1" sp="S_12" ver="5.0"><event timestamp="2014-10-29 12:51:40" /></node>
+	<node cell="Cell 1" name="4.3" phase="Phase 1" sp="S_138" ver="4.0"><event timestamp="2014-10-15 10:02:21">Проба</event><event timestamp="2014-10-15 10:03:08">Проба на програмата</event><event timestamp="2014-10-29 19:05:31" /><event timestamp="2015-06-10 19:02:23">смяна на у-е</event><event timestamp="2015-06-10 19:02:41">Смяна на версията</event></node>
+	<node cell="Cell 1" name="4.4" phase="Phase 1" sp="S_12" ver="1.0"><event timestamp="2014-10-29 12:57:30" /><event timestamp="2014-10-29 12:58:13" /></node>
+	<node cell="Cell 1" name="4.5" phase="Phase 1" sp="S_28" ver="4.0"><event timestamp="2014-10-29 12:04:45" /><event timestamp="2014-10-29 12:55:37" /></node>
+	<node cell="Cell 1" name="4.6" phase="Phase 1" sp="S_180" ver="5.0"><event timestamp="2014-10-29 12:51:40" /></node>
 	<node cell="Cell 1" name="5.2" phase="Phase 1" sp="" ver="2.0" />
 	<node cell="Cell 1" name="5.3" phase="Phase 1" sp="" ver="3.0" />
 	<node cell="Cell 1" name="5.4" phase="Phase 1" sp="" ver="1.0" />

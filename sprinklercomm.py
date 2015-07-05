@@ -395,12 +395,16 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
                 response = xbee.wait_read_frame(250)
                 print "Otgowor", response
+
+                #===============================================================
+                # try: Tuka tryabwa da analiziram kljucha 'samples'
+                #===============================================================
                 try:
-                    sample = response.get('sample',{})
-                    print "Sample", sample
+                    sample = response.get('samples',[])
+                    print "Sample", sample[0]
                 except KeyError:
                     retValue = 9
-                parametersValue = response.get('parameter', {})
+                parametersValue = response.get('parameter', [])
                 print "DIO 0: ", parametersValue[0].get('dio-0')
                 if parametersValue[0].get('dio-0') == True:
                     retValue = 3
