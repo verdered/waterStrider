@@ -393,6 +393,7 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
             try:
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
                 response = xbee.wait_read_frame(250)
+                print "Otgowor sled ATIS: ", response
 
                 #===============================================================
                 # try: Tuka tryabwa da analiziram kljucha 'samples'
@@ -435,4 +436,3 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
         print time.time()-startTime
 ############ Tryabwa da go dopisha!!! za obrabotka na !!!
         return retValue
-    
