@@ -139,6 +139,7 @@ def node_discovery():
         text = "Exception: " + ex.__str__()
         return text
     else:
+        xbee.halt()
         ser.close()
 
 
@@ -171,6 +172,7 @@ def xbee_pin(xbeeRemAddr, xbeePin, xbeePinState):
         text = "Exception is: " + ex.__str__()
         return 0
     else:
+        xbee.halt()
         ser.close()
         
        
@@ -197,6 +199,7 @@ def xbee_is(xbeeRemAddr):
         text = "Exception is: " + ex.__str__()
         return 0
     else:
+        xbee.halt()
         ser.close()    
         
 def xbee_hv(xbeeRemAddr):
@@ -222,6 +225,7 @@ def xbee_hv(xbeeRemAddr):
         text = "Exception is: " + ex.__str__()
         return 0
     else:
+        xbee.halt()
         ser.close()        
 
 def xbee_vr(xbeeRemAddr):
@@ -247,6 +251,7 @@ def xbee_vr(xbeeRemAddr):
         text = "Exception is: " + ex.__str__()
         return 0
     else:
+        xbee.halt()
         ser.close()
         
 def xbee_tp(xbeeRemAddr):
@@ -272,6 +277,7 @@ def xbee_tp(xbeeRemAddr):
         text = "Exception is: " + ex.__str__()
         return 0
     else:
+        xbee.halt()
         ser.close() 
 
 ################################################################################        
@@ -311,6 +317,7 @@ def hiddenNodediscovery(q):
         text = "Exception: " + ex.__str__()
         return text
     else:
+        xbee.halt()
         ser.close()
         
 #===============================================================================
@@ -345,6 +352,7 @@ def hiddenXbeePin(xbeeRemAddr, xbeePin, xbeePinState):
         text = "Exception is: " + ex.__str__()
         return 0
     else:
+        xbee.halt()
         ser.close()
         
        
@@ -381,6 +389,8 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
         while(i < transit):        
             try:
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command=xbeePin,parameter=xbeePinStateHex)
+                resp = xbee.wait_read_frame(250)
+                print "Otgowor sleed komanda: ", resp
             except ValueError:
                 print "ValueError 1"
                 retValue = 1
@@ -394,7 +404,6 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
                 xbee.remote_at(dest_addr_long=xbeeRemAddr.decode('hex'),command="IS",frame_id="C")
                 response = xbee.wait_read_frame(250)
                 print "Otgowor sled ATIS: ", response
-
                 #===============================================================
                 # try: Tuka tryabwa da analiziram kljucha 'samples'
                 #===============================================================
@@ -432,6 +441,7 @@ def hiddenXbeeChangeState(xbeeRemAddr, xbeePin, xbeePinState):
         text = "Exception is: " + ex.__str__()
         retValue = 8
     else:
+        xbee.halt()
         ser.close()
         print time.time()-startTime
 ############ Tryabwa da go dopisha!!! za obrabotka na !!!
