@@ -284,7 +284,7 @@ def xbee_tp(xbeeRemAddr):
 ######################### Threaded #############################################
 ################################################################################
         
-def hiddenNodediscovery(q):
+def hiddenNodediscovery():
     
     comPortList = getActiveComPort()
     if comPortList:
@@ -298,26 +298,22 @@ def hiddenNodediscovery(q):
         ser = serial.Serial(comPort, baudRate, timeout=timeOut)
         print "porta e otworen", ser.isOpen() 
         xbee = ZigBee(ser,escaped=True)
-        node_list=[]        
         xbee.at(command='ND')
         response = {'':''}
         while response <> {}:
             response = xbee.wait_read_frame()
             if response:
                 print response
-                node_list.append(response)
             else:
                 text = "Xbee: Timeout during node discovery operation!"
+                response = {}
                 print text
-         
-        print "Spisak: ", node_list # return []
-        q.put(node_list)
+
     
     except serial.SerialException as ex:
         text = "Exception: " + ex.__str__()
         return text
     else:
-        xbee.halt()
         ser.close()
         
 #===============================================================================

@@ -43,6 +43,8 @@ except ImportError:
     import xml.etree.ElementTree as ET
 
 from ledControlDialog import ledCtrlTimePanel
+
+from threading import Thread
     
 # Global variables for interface.py
 
@@ -80,15 +82,15 @@ def hiddenDiscoveryThreadBody(callback):
     """
     treaded function for node discovery
     """
-    for i in range(10):
-        #delay(500)
-        print "I'm in new thread and working fine" , threading.currentThread().getName()
+#     for i in range(10):
+    #delay(500)
+    print "I'm in new thread and working fine" , threading.currentThread().getName()
         #print "thread ID =" , threading.currentThread.ident()
-        print "starting node_discovery()"
-        node_discovery()
-        print "finished node_discovery()"
+    print "starting hiddenNodediscovery()"
+    hiddenNodediscovery()
+    print "finished hiddenNodediscovery()"
         #delay(500)
-        callback()
+    callback()
         
 def cb_hiddenDiscoveryThread():
     """
@@ -575,6 +577,58 @@ class SCS_SysSettingsFrame(wx.Frame):
         """
         """
         self.Close()
+        
+########################################################################################
+########################################################################################
+class TestThread(Thread):
+    """Test Worker Thread Class."""
+ 
+    #----------------------------------------------------------------------
+    def __init__(self, longAddress):
+        """Init Worker Thread Class."""
+        Thread.__init__(self)
+        self.longAddress = longAddress
+        self.start()    # start the thread
+ 
+    #----------------------------------------------------------------------
+    
+    #----------------------------------------------------------------------
+    def run(self):
+        """Run Worker Thread."""
+        # This is the code executing in the new thread.
+        
+        print "Hidden Discovery"
+    
+        for i in range(6):
+            time.sleep(10)
+            print "w cikyl"
+            response = hiddenXbeeChangeState(self.longAddress, 'D0', 'OFF')
+            print i
+            wx.CallAfter(self.postTime, response)
+        time.sleep(5)
+#         wx.CallAfter(pub.sendMessage, "update", 6)
+        wx.CallAfter(self.theEnd, 6)
+        
+    #----------------------------------------------------------------------
+    def postTime(self, response):
+        """
+        Send time to GUI
+        """
+        print "Az sym postTime"
+        amt = response
+        print "AMT: ", amt
+#         print "Otgowor postTime:", response
+        pub.sendMessage("update", state = amt)
+    
+    def theEnd(self, response):
+        """
+        """
+        print "Az sym theEnd"
+        amt = response
+        pub.sendMessage("update", state = amt)
+        
+####################################################################################
+####################################################################################
 
 class SCS_AddFrame(wx.Frame):
     
@@ -620,8 +674,9 @@ class SCS_AddFrame(wx.Frame):
         
         self.addButtonSave = wx.Button(self, wx.ID_SAVE)
         self.addButtonClose = wx.Button(self, wx.ID_CLOSE)
-        self.button_9 = wx.Button(self, wx.ID_ANY, ("Резерв"))
-        self.button_9.Hide()
+        self.addHiddenDiscovery = wx.Button(self, wx.ID_ANY, ("Резерв"))
+        
+        pub.subscribe(self.updateDisplay, "update")         
 
         self.__set_properties()
         self.__do_layout()
@@ -635,7 +690,8 @@ class SCS_AddFrame(wx.Frame):
         self.addCboxCell.Bind(wx.EVT_TEXT, self.OnChangeSelAddCell, id=wxID_ADDCHANGECELL)
         self.addCboxPhase.Bind(wx.EVT_TEXT, self.OnChangeSelAddPhase, id=wxID_ADDCHANGEPHASE)
         self.addCboxColumn.Bind(wx.EVT_TEXT, self.OnChangeSelAddColumn, id=wxID_ADDCHANGECOLUMN)
-        self.addCboxRow.Bind(wx.EVT_TEXT, self.OnChangeSelAddRow, id=wxID_ADDCHANGEROW)        
+        self.addCboxRow.Bind(wx.EVT_TEXT, self.OnChangeSelAddRow, id=wxID_ADDCHANGEROW)
+        self.Bind(wx.EVT_BUTTON, self.OnHiddenDiscovery, self.addHiddenDiscovery)        
         # end wxGlade
      
     def __set_properties(self):
@@ -674,13 +730,25 @@ class SCS_AddFrame(wx.Frame):
         sizer_5.Add((20, 20), 1, 0, 0)
         sizer_5.Add(self.addButtonSave, 0, wx.ALL, 5)
         sizer_5.Add(self.addButtonClose    , 0, wx.ALL, 5)
-        sizer_5.Add(self.button_9, 0, wx.ALL, 5)
+        sizer_5.Add(self.addHiddenDiscovery, 0, wx.ALL, 5)
         sizer_1.Add(sizer_5, 0, wx.ALL | wx.EXPAND, 0)
         self.SetSizer(sizer_1)
         sizer_1.Fit(self)
         self.Layout()
 
 # Node discovery procedure start.
+
+    def updateDisplay(self, state):
+        """
+        Receives data from thread and updates the display
+        """
+        t = state
+        print "T: ", t
+#         if isinstance(t, int):
+#             print "::: ", t
+#         else:
+#             print ": ", t
+#             self.btn.Enable()
 
     def loadFacilityNodesLbox(self, cell_name, phase_name, col_num, row_num):
         
@@ -750,7 +818,13 @@ class SCS_AddFrame(wx.Frame):
     
     def OnChangeSelAddRow(self, event):
         self.loadFacilityNodesLbox(self.addCboxCell.GetValue(),self.addCboxPhase.GetValue(),self.addCboxColumn.GetValue(),self.addCboxRow.GetValue())
-    
+        
+    def OnHiddenDiscovery(self, event):
+        print "OHD"
+        TestThread('0013A200406E980F')
+#         self.addLboxDiscovered.Append('Start!')
+        btn = event.GetEventObject()
+        btn.Disable()
 
     def OnDiscover(self, event):
 
@@ -1777,26 +1851,8 @@ class SCS_MainFrame(wx.Frame):
     def OnHiddenDiscovery(self, event):
         """
         """
-        print "Skrit find..."
-        if ISALLSTOPPED:
-            global hiddenDiscoveryThread
-            hiddenDiscoveryThread.start()
-            print "On hidden" , threading.currentThread().getName()
-            return
-        else:
-            SCS_ShowMessage("Автоматичния режим е стартиран! Първо спрете всички управления!",0) 
-        return
-    
-        node_discovery()
-        q = Queue.Queue()
-        if ISALLSTOPPED:
-            threadDiscovery = threading.Thread(target = hiddenNodediscovery, args=(q,))
-            threadDiscovery.daemon = True
-            threadDiscovery.start()
-            result = q.get()
-            print "Towa e threading resultat: ", result
-        else:
-            print "W momenta rabotqt uprawleniq!!!"
+        hiddenDiscoveryThread.start()
+        print "finished"
             
     def OnHiddenXbeeChangeState(self, event):
         
