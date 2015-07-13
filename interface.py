@@ -2555,7 +2555,7 @@ class SCS_MainFrame(wx.Frame):
         
     def OnCloseWindow(self, event):
         # dialog to verify exit (including menuExit)
-        dlg = wx.MessageDialog(self, "Want to exit?", "Exit", wx.YES_NO | wx.ICON_QUESTION)
+        dlg = wx.MessageDialog(self, u"Излизането от програмата не води до спиране на стартирани управления! \n\n Да изключа ли програмата въпреки това?", "Exit", wx.YES_NO | wx.ICON_QUESTION)
         if dlg.ShowModal() == wx.ID_YES:
             if self.timer1.IsRunning():
                 self.timer1.Stop()

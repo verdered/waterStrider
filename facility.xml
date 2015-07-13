@@ -4,11 +4,11 @@
         Cell 1
 	<phase name="Phase 1">
 		Phase 1
-		<node mode="0" name="2.8" sp=" TEST">0013A200406E980F</node>
+		<node mode="0" name="2.8" sp="S_118">0013A200409C2FF7</node>
 		<node mode="0" name="3.2" sp="">None</node>
 		<node mode="0" name="3.3" sp="">None</node>
 		<node mode="0" name="3.4" sp="">None</node>
-		<node mode="0" name="3.5" sp="S_118">0013A200409C2FF7</node>     
+		<node mode="0" name="3.5" sp="">None</node>     
 		<node mode="0" name="4.3" sp="S_119">0013A200409C2FFB</node>
 		<node mode="0" name="4.4" sp="S_111">0013A200409C30DC</node>
 		<node mode="0" name="4.5" sp="S_28">0013A200406E96AC</node>     
