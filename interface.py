@@ -133,6 +133,9 @@ def cb_hiddenXbeeChangeStateThread():
         callback function for node discovery
     """
     print "cb_testThread, threadID = ", threading.currentThread().getName()
+    
+#####################################################################################
+#####################################################################################
 
 class hiddenXbeeChangeStateThread(threading.Thread):
     """
@@ -1212,7 +1215,8 @@ class SCS_MainFrame(wx.Frame):
         item = SystemMenu.Append(wx.ID_ANY, text = "Тест управления")
         self.Bind(wx.EVT_MENU, self.onTest, item)
         item = SystemMenu.Append(wx.ID_EXIT, text="Изход\tAlt-X")
-        self.Bind(wx.EVT_MENU, self.OnQuit, item)
+        self.Bind(wx.EVT_MENU, self.OnMenuExit, item)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         MenuBar.Append(SystemMenu,"Система")
         GroupsMenu = wx.Menu()
         item = GroupsMenu.Append(wx.ID_ANY, text = "Настройки")
@@ -1867,11 +1871,16 @@ class SCS_MainFrame(wx.Frame):
         
 #         stateDict = hiddenDiscoveryThread('0013A200406E980F', 'D0', 'ON') #0013A200406E980F
 #         print stateDict
-
         
+    #===========================================================================
+    # OnHiddenXbeePin
+    #===========================================================================
     def OnHiddenXbeePin(self, event):
         print "HXBPIN"
-
+        print ''.join("{:02X}".format(ord(c)) for c in '\x00\x13\xa2\x00@\x9c0\x1c')
+        print ''.join("{:02X}".format(ord(c)) for c in '\x00\x13\xa2\x00@\x8dO\xa1')
+        print ''.join("{:02X}".format(ord(c)) for c in '\x00\x13\xa2\x00@\x86\x89\x15')
+        print ''.join("{:02X}".format(ord(c)) for c in '\x00\x13\xa2\x00@\x9c/\xd4')
 
     def OnButtonLedCtrlPressed(self, event):
         """
@@ -2532,7 +2541,7 @@ class SCS_MainFrame(wx.Frame):
         except ValueError:
             return float(s)            
             
-    def OnQuit(self, event=None):
+    def OnMenuExit(self, event):
         """Exit application."""
         if self.timer1.IsRunning():
             self.timer1.Stop()
@@ -2542,7 +2551,22 @@ class SCS_MainFrame(wx.Frame):
             self.timer2.Stop()
         else:
             pass        
-        self.Close()
+        self.Close(True)
+        
+    def OnCloseWindow(self, event):
+        # dialog to verify exit (including menuExit)
+        dlg = wx.MessageDialog(self, "Want to exit?", "Exit", wx.YES_NO | wx.ICON_QUESTION)
+        if dlg.ShowModal() == wx.ID_YES:
+            if self.timer1.IsRunning():
+                self.timer1.Stop()
+            else:
+                pass
+            if self.timer2.IsRunning():
+                self.timer2.Stop()
+            else:
+                pass
+            self.Destroy()  # frame
+        dlg.Destroy()
         
     def stopCellPhase(self, cell_name, phase_name):
 
@@ -2557,6 +2581,9 @@ class SCS_MainFrame(wx.Frame):
         self.stopGroup(PREVIOUS_GROUP)
         self.stopGroup2(PREVIOUS_GROUP2)
     
+    #===========================================================================
+    # stopAll
+    #===========================================================================
     def stopAll(self):
         """
         """

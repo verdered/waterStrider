@@ -10,14 +10,12 @@
 # Copyright:    (c) 2013 by Pronix1 Ltd.
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
-import threading
-import time
 
-from pygame.time import delay
 __author__="svilen.zlatev"
 __date__ ="$2013-8-25 11:47:08$"
 
-
+import threading
+import time
 import os
 import wx
 import serial
@@ -31,8 +29,9 @@ except ImportError:
     import xml.etree.ElementTree as ET
     
 import Queue
-    
-    
+
+from pygame.time import delay
+
 listOfNodes = []
 
 ISCOMMANDINPROCESS = 0
