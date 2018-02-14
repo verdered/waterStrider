@@ -84,7 +84,7 @@ def hiddenDiscoveryThreadBody(callback):
     """
 #     for i in range(10):
     #delay(500)
-    print "I'm in new thread and working fine" , threading.currentThread().getName()
+    print "I am in new thread and working fine" , threading.currentThread().getName()
         #print "thread ID =" , threading.currentThread.ident()
     print "starting hiddenNodediscovery()"
     hiddenNodediscovery()
